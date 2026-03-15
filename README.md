@@ -1,6 +1,6 @@
 # Quick Commerce Dark Store Analytics Pipeline
 
-This project implements a **serverless AWS data pipeline** to analyze operational performance of quick commerce **dark stores** (micro-warehouses used for fast grocery delivery).
+This project implements an end-to-end serverless AWS data pipeline for analyzing operational performance of quick commerce dark stores.
 
 The system ingests raw order data, processes it automatically using AWS services, and enables SQL-based analytics through Amazon Athena. The results are visualized using a React-based dashboard.
 
@@ -10,21 +10,48 @@ The system ingests raw order data, processes it automatically using AWS services
 
 The pipeline follows a **serverless data lake architecture**:
 
-Orders CSV
+Data Ingestion Layer
+EC2 Auto Scaling Group (inside VPC)
 ↓
-Amazon S3 (Raw Landing Bucket)
+Amazon S3 Raw Data Lake
 ↓
-AWS Lambda (Data Cleaning + CSV → Parquet Conversion)
+AWS Lambda ETL (CSV → Parquet)
 ↓
-Amazon S3 (Processed Data Bucket)
+Amazon S3 Processed Data
 ↓
 AWS Glue Data Catalog
 ↓
-Amazon Athena (SQL Analytics)
+Amazon Athena Analytics
 ↓
-React Dashboard
+React Operations Dashboard
 
 ![Pipeline Architecture](architecture/architecture.png)
+
+---
+
+# AWS Services Used
+
+This project leverages multiple AWS services to build a scalable serverless data pipeline:
+
+- **Amazon S3** – Data lake storage for raw and processed datasets
+- **AWS Lambda** – Serverless ETL processing
+- **AWS Glue** – Metadata catalog and schema discovery
+- **Amazon Athena** – Serverless SQL analytics on S3
+- **Amazon EC2** – Data ingestion simulation
+- **EC2 Auto Scaling** – Scalable ingestion infrastructure
+- **Amazon VPC** – Network isolation for compute resources
+
+---
+
+# Data Pipeline Flow
+
+1. Order datasets are uploaded to the **raw S3 bucket**.
+2. An **S3 event trigger** invokes the Lambda ETL function.
+3. The Lambda function cleans the dataset and converts **CSV to Parquet**.
+4. Processed data is stored in the **processed S3 bucket**.
+5. A **Glue crawler** catalogs the dataset and updates the schema.
+6. **Amazon Athena** enables SQL queries directly on the data lake.
+7. The **React dashboard** visualizes insights derived from Athena analytics.
 
 ---
 
