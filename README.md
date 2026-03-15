@@ -31,7 +31,8 @@ Dashboard (React + Vite)
 AWS S3  
 AWS Lambda  
 AWS Glue  
-Amazon Athena  
+Amazon Athena 
+![Athena Query Result](screenshots/athena_query_result.png)
 React + Vite Dashboard  
 
 ## Running the Dashboard
