@@ -32,14 +32,49 @@ React Dashboard
 
 ## Lambda ETL Function
 
-The Lambda function `darkstore-etl` is triggered when new CSV files are uploaded to the S3 raw bucket.
+The Lambda function `darkstore-etl` is triggered when a new CSV file is uploaded to the raw S3 bucket `darkstore-raw-harsha`.
 
-The function performs the following operations:
+The function performs the following steps:
 
-* Reads raw CSV order data from S3
-* Cleans and prepares the dataset
-* Converts CSV data into **Parquet format**
-* Uploads the optimized dataset to the processed S3 bucket
+- Reads raw CSV order data from Amazon S3
+- Converts the dataset to **Parquet format**
+- Writes the processed file to the processed S3 bucket
+
+Example ETL logic:
+
+```python
+import boto3
+import pandas as pd
+import io
+
+s3 = boto3.client('s3')
+
+def lambda_handler(event, context):
+
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = event['Records'][0]['s3']['object']['key']
+
+    response = s3.get_object(Bucket=bucket, Key=key)
+    df = pd.read_csv(response['Body'])
+
+    buffer = io.BytesIO()
+    df.to_parquet(buffer, index=False)
+
+    processed_bucket = "darkstore-processed-harsha"
+    new_key = key.replace(".csv", ".parquet")
+
+    s3.put_object(
+        Bucket=processed_bucket,
+        Key=new_key,
+        Body=buffer.getvalue()
+    )
+```
+
+The full implementation can be found here:
+
+[lambda/data_processing.py](lambda/data_processing.py)
+
+The Lambda function is configured with an **S3 event trigger** on the `darkstore-raw-harsha` bucket for `.csv` object creation events. When a new order file is uploaded, the ETL function executes automatically.
 
 ![Lambda Function](screenshots/lambda_function.png)
 
@@ -56,6 +91,32 @@ The project uses three S3 buckets:
 | darkstore-query-results    | Stores Athena query outputs     |
 
 ![S3 Buckets](screenshots/s3_buckets.png)
+
+---
+
+## AWS Glue Data Catalog
+
+AWS Glue is used to automatically catalog the processed datasets stored in Amazon S3.
+
+A **Glue Crawler** scans the Parquet files stored in the processed data bucket:
+
+`darkstore-processed-harsha`
+
+The crawler automatically infers the schema and registers a table in the AWS Glue Data Catalog.
+
+**Catalog details**
+
+Database:
+```
+darkstore_db
+```
+
+Table:
+```
+darkstore_processed_harsha
+```
+
+This cataloged table allows Amazon Athena to run SQL queries directly on the processed Parquet data stored in S3.
 
 ---
 
@@ -191,6 +252,14 @@ npm run dev
 ```
 
 The dashboard visualizes analytics generated from the pipeline.
+
+## Dashboard Visualization
+
+The React dashboard visualizes operational analytics derived from the Athena query results.
+
+For demonstration purposes, the dashboard uses **pre-computed analytics outputs exported from Amazon Athena** rather than executing live Athena queries.
+
+This approach keeps the frontend lightweight while still demonstrating how analytics insights can be visualized in a real-world operations dashboard.
 
 ---
 
