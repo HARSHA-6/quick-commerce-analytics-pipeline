@@ -1,11 +1,45 @@
+# Quick Commerce Dark Store Analytics Pipeline
 
-  # Follow prompt instructions
+This project analyzes delivery performance and stockout issues for quick commerce dark stores.
 
-  This is a code bundle for Follow prompt instructions. The original project is available at https://www.figma.com/design/9d69mk0gyId0njqfuHGKrw/Follow-prompt-instructions.
+The system processes order data using an AWS serverless pipeline and visualizes insights through a dashboard.
 
-  ## Running the code
+## Architecture
 
-  Run `npm i` to install the dependencies.
+S3 (Raw Orders)
+↓
+AWS Lambda (Data Cleaning & Transformation)
+↓
+S3 Processed Bucket (Parquet)
+↓
+AWS Glue (Data Catalog)
+↓
+Amazon Athena (SQL Analytics)
+↓
+Dashboard (React + Vite)
 
-  Run `npm run dev` to start the development server.
-  
+## Key Metrics
+
+• Average delivery time  
+• Late delivery percentage (>10 minutes)  
+• Product stockout frequency  
+• Orders per hour  
+• Dark store performance comparison  
+
+## Tech Stack
+
+AWS S3  
+AWS Lambda  
+AWS Glue  
+Amazon Athena  
+React + Vite Dashboard  
+
+## Running the Dashboard
+
+Install dependencies:
+
+npm install
+
+Start the server:
+
+npm run dev
