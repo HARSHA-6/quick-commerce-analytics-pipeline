@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --font-header: 'Inter Tight', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
