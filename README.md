@@ -35,6 +35,19 @@ Amazon Athena
 ![Athena Query Result](screenshots/athena_query_result.png)
 React + Vite Dashboard  
 
+## Dataset
+
+The project uses a simulated quick-commerce order dataset containing:
+
+- order_id
+- dark_store_id
+- product_category
+- order_timestamp
+- delivery_timestamp
+- out_of_stock_flag
+
+A small sample of the dataset is included in the `data/` folder for reference.
+
 ## Running the Dashboard
 
 Install dependencies:
